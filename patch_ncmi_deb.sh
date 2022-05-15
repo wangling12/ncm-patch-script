@@ -107,4 +107,5 @@ rm -rf "$NEW_PKG"/DEBIAN/{md5sums,shlibs}
 
 dpkg -b "$NEW_PKG"
 mv "$NEW_PKG.deb" "$HERE"/
+rm -rf "$TMP"
 
