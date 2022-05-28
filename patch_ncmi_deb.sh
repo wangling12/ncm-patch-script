@@ -28,7 +28,7 @@ USAGE_LIBS=(
 
 cd "$TMP"
 apt source vlc
-sudo apt install libmpg123-dev libflac-dev libmpeg2-4-dev libgnutls28-dev libsoxr-dev libsamplerate0-dev
+sudo apt install libmpg123-dev libflac-dev libmpeg2-4-dev libgnutls28-dev libsoxr-dev libsamplerate0-dev libasound2-dev
 cd vlc-3*
 cat > ncm.patch <<EOF
 diff --git a/modules/access/http/resource.c b/modules/access/http/resource.c
@@ -83,6 +83,7 @@ mkdir build && cd build
     --disable-caca
 
 make -j$(nproc)
+cp share/vlc.appdata.xml.in share/vlc.appdata.xml
 make DESTDIR="$TMP/vlc-ins" install 
 
 cd "$TMP"
