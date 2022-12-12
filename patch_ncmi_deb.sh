@@ -1,4 +1,5 @@
 #!/bin/bash
+set -e
 HERE=$(realpath $(dirname $0))
 TMP=$(mktemp -d)
 NEW_PKG="custom_netease-cloud-music"
@@ -27,6 +28,8 @@ USAGE_LIBS=(
     )
 
 cd "$TMP"
+sudo sed -i 's/#[ \t]*deb-src/deb-src/g' /etc/apt/sources.list
+sudo apt update
 apt source vlc
 sudo apt install libmpg123-dev libflac-dev libmpeg2-4-dev libgnutls28-dev libsoxr-dev libsamplerate0-dev libasound2-dev automake build-essential
 cd vlc-3*
@@ -90,13 +93,13 @@ cd "$TMP"
 wget https://d1.music.126.net/dmusic/netease-cloud-music_1.2.1_amd64_ubuntu_20190428.deb
 dpkg-deb -R netease-cloud-music_1.2.1_amd64_ubuntu_20190428.deb "$NEW_PKG"
 cd "$NEW_PKG/opt/netease/netease-cloud-music/libs"
-mkdir bak && mv * bak/ 2>/dev/null
+mkdir ../bak && mv * ../bak/
 for i in ${USAGE_LIBS[@]}
 do
-    mv bak/$i .
+    mv ../bak/$i .
 done
 mv "$TMP"/vlc-ins/usr/lib/* .
-rm -rf bak pkgconfig
+rm -rf ../bak pkgconfig
 find . -name "*.la" | xargs rm -rf
 
 mkdir qcef/swiftshader/ && cd qcef/swiftshader/
@@ -109,4 +112,3 @@ rm -rf "$NEW_PKG"/DEBIAN/{md5sums,shlibs}
 dpkg -b "$NEW_PKG"
 mv "$NEW_PKG.deb" "$HERE"/
 rm -rf "$TMP"
-
